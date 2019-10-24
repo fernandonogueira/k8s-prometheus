@@ -1,14 +1,14 @@
 apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
-  name: $APP_INSTANCE_NAME-prometheus
+  name: cluster-monitoring-prometheus
   labels: &Labels
     k8s-app: prometheus
-    app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/name: cluster-monitoring
     app.kubernetes.io/component: prometheus
 spec:
-  serviceName: "$APP_INSTANCE_NAME-prometheus"
-  replicas: 2
+  serviceName: "cluster-monitoring-prometheus"
+  replicas: 1
   podManagementPolicy: "Parallel"
   updateStrategy:
     type: "RollingUpdate"
@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: Always
         command: ["chown", "-R", "65534:65534", "/data"]
         volumeMounts:
-        - name: $APP_INSTANCE_NAME-prometheus-data
+        - name: cluster-monitoring-prometheus-data
           mountPath: /data
           subPath: ""
       containers:
@@ -64,7 +64,7 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
-            - name: $APP_INSTANCE_NAME-prometheus-data
+            - name: cluster-monitoring-prometheus-data
               mountPath: /data
               subPath: ""
       terminationGracePeriodSeconds: 300
@@ -72,8 +72,8 @@ spec:
         # The Prometheus ConfigMap is mounted into the Pods as a volume at `/etc/config`
         - name: config-volume
           configMap:
-            name: $APP_INSTANCE_NAME-prometheus-config
-      # Configures Pod anti-affinity so that Prometheus Pods are assigned to different Nodes. 
+            name: cluster-monitoring-prometheus-config
+      # Configures Pod anti-affinity so that Prometheus Pods are assigned to different Nodes.
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -87,10 +87,9 @@ spec:
   # A `volumeClaimTemplate` of `16Gi` of Block Storage is configured and used for Prometheus data storage, mounted at `/data/`
   volumeClaimTemplates:
   - metadata:
-      name: $APP_INSTANCE_NAME-prometheus-data
+      name: cluster-monitoring-prometheus-data
       labels: *Labels
     spec:
-      storageClassName: do-block-storage
       accessModes:
         - ReadWriteOnce
       resources:

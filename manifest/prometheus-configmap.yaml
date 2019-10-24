@@ -1,14 +1,14 @@
 # alerts.yaml and rules.yaml generated using kubernetes-mixin (https://github.com/kubernetes-monitoring/kubernetes-mixin)
-# 
+#
 # prometheus.yaml sourced from https://github.com/GoogleCloudPlatform/click-to-deploy/blob/master/k8s/prometheus/manifest/prometheus-configmap.yaml
 # and modified to work with DigitalOcean Kubernetes
 apiVersion: v1
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: $APP_INSTANCE_NAME-prometheus-config
+  name: cluster-monitoring-prometheus-config
   labels:
-    app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/name: cluster-monitoring
     app.kubernetes.io/component: prometheus
 data:
   # If you'd like to add your own alerts or modify existing alerts, you can edit this ConfigMap value.
@@ -255,14 +255,14 @@ data:
         - role: endpoints
           namespaces:
             names:
-            - ${NAMESPACE}
+            - vv-monitoring
         scheme: http
         path_prefix: /
         timeout: 10s
         relabel_configs:
         - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_label_k8s_app]
           separator: ;
-          regex: ${NAMESPACE};alertmanager
+          regex: vv-monitoring;alertmanager
           replacement: $1
           action: keep
         - source_labels: [__meta_kubernetes_endpoint_port_name]
@@ -447,7 +447,7 @@ data:
         action: replace
       - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_label_k8s_app]
         separator: ;
-        regex: ${NAMESPACE};alertmanager
+        regex: vv-monitoring;alertmanager
         replacement: $1
         action: keep
       - source_labels: [__meta_kubernetes_namespace]
@@ -520,7 +520,7 @@ data:
         action: labelmap
       - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name]
         separator: ;
-        regex: ${NAMESPACE};kubernetes
+        regex: vv-monitoring;kubernetes
         replacement: $1
         action: keep
       - source_labels: [__meta_kubernetes_endpoint_port_name]
@@ -543,7 +543,7 @@ data:
         action: labelmap
       - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_label_k8s_app]
         separator: ;
-        regex: ${NAMESPACE};kube-state-metrics
+        regex: vv-monitoring;kube-state-metrics
         replacement: $1
         action: keep
     - job_name: kubelet
@@ -590,7 +590,7 @@ data:
         action: replace
       - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_k8s_app]
         separator: ;
-        regex: ${NAMESPACE};node-exporter
+        regex: vv-monitoring;node-exporter
         replacement: $1
         action: keep
       - source_labels: [__meta_kubernetes_namespace]
@@ -632,7 +632,7 @@ data:
         action: replace
       - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_k8s_app]
         separator: ;
-        regex: ${NAMESPACE};prometheus
+        regex: vv-monitoring;prometheus
         replacement: $1
         action: keep
       - source_labels: [__meta_kubernetes_namespace]

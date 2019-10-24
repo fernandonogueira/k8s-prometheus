@@ -1,10 +1,10 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: $APP_INSTANCE_NAME-kube-state-metrics
+  name: cluster-monitoring-kube-state-metrics
   labels:
     k8s-app: kube-state-metrics
-    app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/name: cluster-monitoring
     app.kubernetes.io/component: kube-state-metrics
 spec:
   selector:
@@ -36,7 +36,7 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           timeoutSeconds: 5
-      # Watch the `kube-state-metrics` Pod's resource usage, and dynamically scale the Deployment as necessary. 
+      # Watch the `kube-state-metrics` Pod's resource usage, and dynamically scale the Deployment as necessary.
       # To learn more, you can consult the `README` from https://github.com/kubernetes/autoscaler/tree/master/addon-resizer
       - name: addon-resizer
         image: k8s.gcr.io/addon-resizer:1.7
@@ -64,4 +64,4 @@ spec:
           - --memory=100Mi
           - --extra-memory=2Mi
           - --threshold=5
-          - --deployment=$APP_INSTANCE_NAME-kube-state-metrics
+          - --deployment=cluster-monitoring-kube-state-metrics
