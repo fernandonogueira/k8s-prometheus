@@ -110,6 +110,7 @@ spec:
   - metadata:
       name: cluster-monitoring-grafana-data
     spec:
+      storageClassName: nfs
       accessModes:
         - ReadWriteOnce
       resources:

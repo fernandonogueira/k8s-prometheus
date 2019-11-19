@@ -99,6 +99,7 @@ spec:
   - metadata:
       name: cluster-monitoring-alertmanager-data
     spec:
+      storageClassName: nfs
       accessModes:
         - ReadWriteOnce
       resources:

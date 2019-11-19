@@ -59,8 +59,8 @@ spec:
           # Resource requests of `200m` of CPU and `1000Mi` of memory
           resources:
             requests:
-              cpu: 150m
-              memory: 1000Mi
+              cpu: 3
+              memory: 2000Mi
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
@@ -90,6 +90,7 @@ spec:
       name: cluster-monitoring-prometheus-data
       labels: *Labels
     spec:
+      storageClassName: nfs
       accessModes:
         - ReadWriteOnce
       resources:
