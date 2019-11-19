@@ -59,7 +59,7 @@ spec:
           # Resource requests of `200m` of CPU and `1000Mi` of memory
           resources:
             requests:
-              cpu: 3
+              cpu: 2
               memory: 2000Mi
           volumeMounts:
             - name: config-volume
@@ -95,4 +95,4 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: "8Gi"
+          storage: "30Gi"
